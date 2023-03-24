@@ -1,22 +1,27 @@
-﻿using System;
-using Microsoft.CognitiveServices.Speech;
+using System;
+using System.Speech.Recognition;
 
-namespace SpeechToText
+namespace ConsoleApp
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var config = SpeechConfig.FromSubscription("YOUR_SUBSCRIPTION_KEY", "YOUR_REGION");
-            using (var recognizer = new SpeechRecognizer(config))
-            {
-                Console.WriteLine("Say something...");
-                var result = recognizer.RecognizeOnceAsync().Result;
-                Console.WriteLine($"Text: {result.Text}");
-            }
+            var recognizer = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
+            recognizer.LoadGrammar(new DictationGrammar());
+            recognizer.SetInputToDefaultAudioDevice();
 
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
+            recognizer.SpeechRecognized += (sender, eventArgs) =>
+            {
+                Console.WriteLine("You said: " + eventArgs.Result.Text);
+            };
+
+            recognizer.RecognizeAsync(RecognizeMode.Multiple);
+
+            Console.WriteLine("Listening... Press Enter to stop.");
+            Console.ReadLine();
+
+            recognizer.Dispose();
         }
     }
 }
