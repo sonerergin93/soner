@@ -1,0 +1,44 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace WinFormsApp5
+{
+    public partial class Form1 : Form
+    {
+        private List<Kisi> kisiler = new List<Kisi>();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void kaydet_Click(object sender, EventArgs e)
+        {
+            Kisi kisi = new Kisi();
+            kisi.Ad = adTextBox.Text;
+            kisi.Soyad = soyadTextBox.Text;
+            kisi.Adres = adresTextBox.Text;
+
+            kisiler.Add(kisi);
+
+            MessageBox.Show("Kişi başarıyla kaydedildi.");
+        }
+
+        private void ListeleButton_Click(object sender, EventArgs e)
+        {
+            listBox.Items.Clear();
+
+            var adlar = kisiler.Select(kisi => kisi.Ad).Distinct().ToList();
+
+            foreach (string ad in adlar)
+            {
+                listBox.Items.Add(ad);
+            }
+    }
+}
